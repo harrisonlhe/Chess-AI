@@ -1,0 +1,1 @@
+Simply compile all and run the main class. Should print out lots of junk and end with a note about the history function. Still some errors with it but everything that needs to happen to get to the goal does.
