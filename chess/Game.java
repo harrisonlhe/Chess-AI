@@ -268,7 +268,121 @@ class Game {
             {blackRo1, blackPa7, null, null, null, null, whitePa7, whiteRo1} };
         _board = newBoard;
     }
-
+		
+    public List<Move> listValidMoves(){
+    	List<Move> validMoves=new ArrayList<Move>();
+    	for(int x=0; x<8; x++) {
+    		for(int y=0; y<8; y++) {
+    			if(_board[x][y]!=null) {
+	    			if(_board[x][y].color().equals(_turn)) {
+	    				validMoves.addAll(listValidMoves(_board[x][y],x,y));
+	    			}
+    			}
+    		}
+    	}
+    	return validMoves;
+    }
+    
+    public List<Move> listValidMoves(Piece p, int x, int y){
+    	List<Move> validMoves=new ArrayList<Move>();
+    	ArrayList<LocationPair> potentialLocations=new ArrayList<LocationPair>();
+    	if(p.type()==PAWN) {
+    		potentialLocations.add(new LocationPair(x,y+p.color().direction()));
+    		LocationPair l=new LocationPair(x,y+2*p.color().direction());
+    		if(l.onBoard()) potentialLocations.add(l);
+    	}
+    	if(p.type()==KNIGHT) {
+    		LocationPair l=new LocationPair(x+2,y+1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x+2,y-1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x+1,y+2);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x+1,y-2);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-1,y+2);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-1,y-2);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-2,y+1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-2,y-1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    	}
+    	if(p.type()==BISHOP) {
+    		for(int xDir=-x; xDir<8-x; xDir++) {
+    			if(xDir!=0) {
+    				LocationPair l=new LocationPair(x+xDir,y+xDir);
+    	    		if(l.onBoard()) potentialLocations.add(l);
+    	    		l=new LocationPair(x+xDir,y-xDir);
+    	    		if(l.onBoard()) potentialLocations.add(l);
+    			}
+    		}
+    	}
+    	if(p.type()==ROOK) {
+    		for(int xDir=-x; xDir<8-x; xDir++) {
+    			if(xDir!=0) {
+					LocationPair l=new LocationPair(x+xDir,y);
+		    		if(l.onBoard()) potentialLocations.add(l);
+    			}
+    		}
+    		for(int yDir=-y; yDir<8-y; yDir++) {
+    			if(yDir!=0) {
+					LocationPair l=new LocationPair(x,y+yDir);
+		    		if(l.onBoard()) potentialLocations.add(l);
+    			}
+    		}
+    	}
+    	if(p.type()==QUEEN) {
+    		for(int xDir=-x; xDir<8-x; xDir++) {
+    			if(xDir!=0) {
+    				LocationPair l=new LocationPair(x+xDir,y+xDir);
+    	    		if(l.onBoard()) potentialLocations.add(l);
+    	    		l=new LocationPair(x+xDir,y-xDir);
+    	    		if(l.onBoard()) potentialLocations.add(l);
+    			}
+    		}
+    		for(int xDir=-x; xDir<8-x; xDir++) {
+    			if(xDir!=0) {
+					LocationPair l=new LocationPair(x+xDir,y);
+		    		if(l.onBoard()) potentialLocations.add(l);
+    			}
+    		}
+    		for(int yDir=-y; yDir<8-y; yDir++) {
+    			if(yDir!=0) {
+					LocationPair l=new LocationPair(x,y+yDir);
+		    		if(l.onBoard()) potentialLocations.add(l);
+    			}
+    		}
+    	}
+    	if(p.type()==KING) {
+    		LocationPair l=new LocationPair(x+1,y+1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x+1,y);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x+1,y-1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x,y+1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x,y-1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-1,y+1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-1,y);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-1,y-1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    	}
+    	for(LocationPair l : potentialLocations) {
+			MoveValidityPair pair=p.outputPairAndMove(l.x(), l.y());
+			if(pair.validity()) {
+				this.undoMove();
+				validMoves.add(pair.move());
+			}
+		}
+    	return validMoves;
+    }
+		
     /** Returns the x-location of the king of color COLOR. */
     public int kingX(PieceColor color) {
         if (color == WHITE) {
