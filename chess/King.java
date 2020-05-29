@@ -71,6 +71,44 @@ public class King implements Piece {
         }
     }
 
+    public MoveValidityPair outputPairAndMove(int a, int b) {
+    	if (Math.abs(a - _x) <= 1 && Math.abs(b - _y) <= 1
+                && (_game.get(a, b) == null || _game.get(a, b).color() != _color)) {
+                Move move = new SingleMove(this, _x, _y, _game.get(a, b), a, b);
+                return new MoveValidityPair(move, makeMoveCareful(move));
+            } else if (_x == originalX() && _y == originalY()
+                && a == originalX() + 2 && b == originalY()
+                && _game.get(a - 1, b) == null && _game.get(a, b) == null
+                && _game.get(a + 1, b) != null && _game.get(a + 1, b).type() == ROOK
+                && _game.get(a + 1, b).color() == _color && !_game.inCheck(_color)
+                && !_game.guarded(a - 1, b) && !_game.guarded(a, b)
+                && !_moved && !((Rook) _game.get(a + 1, b)).moved()) {
+                SingleMove move1 = new SingleMove(this, _x, _y,
+                    _game.get(a, b), a, b);
+                SingleMove move2 = new SingleMove(_game.get(a + 1, b),
+                    a + 1, b, null, a - 1, b);
+                DoubleMove move = new DoubleMove(move1, move2);
+                return new MoveValidityPair(move, makeMoveCareful(move));
+            } else if (_x == originalX() && _y == originalY()
+                && a == originalX() - 2 && b == originalY()
+                && _game.get(a - 1, b) == null && _game.get(a, b) == null
+                && _game.get(a + 1, b) == null && _game.get(a - 2, b) != null
+                && _game.get(a - 2, b).type() == ROOK
+                && _game.get(a - 2, b).color() == _color
+                && !_game.inCheck(_color)
+                && !_game.guarded(a - 1, b) && !_game.guarded(a, b)
+                && !_moved && !((Rook) _game.get(a - 2, b)).moved()) {
+                SingleMove move1 = new SingleMove(this, _x, _y,
+                    _game.get(a, b), a, b);
+                SingleMove move2 = new SingleMove(_game.get(a - 2, b), a - 2,
+                    b, null, a + 1, b);
+                DoubleMove move = new DoubleMove(move1, move2);
+                return new MoveValidityPair(move, makeMoveCareful(move));
+            } else {
+                return new MoveValidityPair(null, false);
+            }
+    }
+
     @Override
     public void setLocation(int x, int y) {
         _x = x;
