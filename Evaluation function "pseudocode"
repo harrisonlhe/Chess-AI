@@ -1,0 +1,16 @@
+/* This is the "pseudocode" for our evaluation function
+
+Assign piece values: 
+
+Pawn = 1
+Knight = 3
+Bishop = 3
+Rook = 5
+Queen = 9
+
+"Score": Sum of white piece values - Sum of black piece values
+
+
+
+
+*/
