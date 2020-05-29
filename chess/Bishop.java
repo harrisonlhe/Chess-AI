@@ -58,6 +58,33 @@ public class Bishop implements Piece {
             return false;
         }
     }
+    
+    public MoveValidityPair outputPairAndMove(int a, int b) {
+    	if (_game.get(a, b) != null
+                && _game.get(a, b).color() == _color) {
+                return new MoveValidityPair(null, false);
+            } else if (a + b == _x + _y) {
+                int dir = (a - _x) / Math.abs(a - _x);
+                for (int i = _x + dir, j = _y - dir; i != a; i += dir, j -= dir) {
+                    if (_game.get(i, j) != null) {
+                        return new MoveValidityPair(null, false);
+                    }
+                }
+                Move move = new SingleMove(this, _x, _y, _game.get(a, b), a, b);
+                return new MoveValidityPair(move, makeMoveCareful(move));
+            } else if (a - b == _x - _y) {
+                int dir = (a - _x) / Math.abs(a - _x);
+                for (int i = _x + dir, j = _y + dir; i != a; i += dir, j += dir) {
+                    if (_game.get(i, j) != null) {
+                        return new MoveValidityPair(null, false);
+                    }
+                }
+                Move move = new SingleMove(this, _x, _y, _game.get(a, b), a, b);
+                return new MoveValidityPair(move, makeMoveCareful(move));
+            } else {
+                return new MoveValidityPair(null, false);
+            }
+    }
 
     @Override
     public void setLocation(int x, int y) {
