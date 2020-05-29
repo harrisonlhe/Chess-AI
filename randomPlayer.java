@@ -4,7 +4,7 @@ public ChessPlayer() {
 }
 
 public ChessMove getMove(Game current) {
-  			return game.listValidMoves().get((int)(game.listValidMoves().size()*Math.random()));
+  			return current.listValidMoves().get((int)(current.listValidMoves().size()*Math.random()));
 }
 
 }
