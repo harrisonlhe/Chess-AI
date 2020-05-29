@@ -15,4 +15,13 @@ public class LocationPair {
 	public int y() {
 		return posY;
 	}
+	public boolean onBoard() {
+		if(posX<0 || posX>7) {
+			return false;
+		}
+		if(posY<0 || posY>7) {
+			return false;
+		}
+		return true;
+	}
 }
