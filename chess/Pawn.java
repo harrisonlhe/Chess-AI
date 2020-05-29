@@ -1,6 +1,9 @@
 package chess;
 
-import static chess.PieceType.*;
+import static chess.PieceType.PAWN;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** A pawn in a chess game.
  *  @author Wan Fung Chui
@@ -92,6 +95,67 @@ public class Pawn implements Piece {
             return false;
         }
     }
+    
+    public MoveValidityPair outputPairAndMove(int a, int b) {
+        if (_y == start()) {
+            if (b == _y + 2 * direction()) {
+                if (a == _x && _game.get(a, _y + direction()) == null
+                    && _game.get(a, b) == null) {
+                    Move move = new SingleMove(this, _x, _y,
+                        _game.get(a, b), a, b);
+                    return new MoveValidityPair(move, makeMoveCareful(move));
+                } else {
+                    return new MoveValidityPair(null, false);
+                }
+            }
+        }
+        if (b == _y + direction()) {
+            if (a == _x && _game.get(a, b) == null) {
+                if (b == start() + 6 * direction()) {
+                    SingleMove move1 = new SingleMove(this, _x, _y,
+                        _game.get(a, b), a, b);
+                    Piece newQu = new Queen(_color, _game, a, b);
+                    SingleMove move2 = new SingleMove(newQu, a, b, this, a, b);
+                    DoubleMove move = new DoubleMove(move1, move2);
+                    return new MoveValidityPair(move, makeMoveCareful(move));
+                } else {
+                    Move move = new SingleMove(this, _x, _y,
+                        _game.get(a, b), a, b);
+                    return new MoveValidityPair(move, makeMoveCareful(move));
+                }
+            } else if (Math.abs(a - _x) == 1 && _game.get(a, b) != null
+                && _game.get(a, b).color() != _color) {
+                if (b == start() + 6 * direction()) {
+                    SingleMove move1 = new SingleMove(this, _x, _y,
+                        _game.get(a, b), a, b);
+                    Piece newQueen = new Queen(_color, _game, a, b);
+                    SingleMove move2 = new SingleMove(newQueen, a, b,
+                        this, a, b);
+                    DoubleMove move = new DoubleMove(move1, move2);
+                    return new MoveValidityPair(move, makeMoveCareful(move));
+                } else {
+                    Move move = new SingleMove(this, _x, _y,
+                        _game.get(a, b), a, b);
+                    return new MoveValidityPair(move, makeMoveCareful(move));
+                }
+            } else if (Math.abs(a - _x) == 1 && _game.get(a, b) == null
+                && _y == start() + 3 * direction() && _game.get(a, _y) != null
+                && _game.get(a, _y).color() != _color
+                && _game.get(a, _y).type() == PAWN
+                && _game.get(a, _y) == _game.lastMover()) {
+                SingleMove move1 = new SingleMove(this, _x, _y,
+                    _game.get(a, b), a, b);
+                SingleMove move2 = new SingleMove(null, _x, _y,
+                    _game.get(a, b - direction()), a, b - direction());
+                DoubleMove move = new DoubleMove(move1, move2);
+                return new MoveValidityPair(move, makeMoveCareful(move));
+            } else {
+                return new MoveValidityPair(null, false);
+            }
+        } else {
+            return new MoveValidityPair(null, false);
+        }
+    }
 
     @Override
     public void setLocation(int x, int y) {
@@ -133,7 +197,7 @@ public class Pawn implements Piece {
         return _color.direction();
     }
 
-    /** Returns 1 if white, and 6 if black. */
+    /** Returns 1 if white, and 6 if black. */ //comment is wrong
     private int start() {
         if (_color == PieceColor.WHITE) {
             return 6;
