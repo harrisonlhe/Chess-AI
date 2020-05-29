@@ -85,6 +85,48 @@ class Game {
 		
 		return score;
 	}
+	
+	
+	/** Very simple material counter, slightly edited */
+	public int simpleEval1() {
+		int score = 0;
+		for (int r = 0; r < 8; r++) {
+			for (int c = 0; c < 8; c++) {
+				if (!(_board[r][c] == null)) {
+					if (_board[r][c].type().abbrev().equals("pa")) {
+						if (_board[r][c].color().abbrev().equals("w")) {
+							score++;
+						} else {
+							score--;
+						}
+					}
+
+					if (_board[r][c].type().abbrev().equals("bi") || _board[r][c].type().abbrev().equals("kn")) {
+						if (_board[r][c].color().abbrev().equals("w")) {
+							score += 3;
+						} else {
+							score -= 3;
+						}
+					}
+
+					if (_board[r][c].type().abbrev().equals("ro")) {
+						if (_board[r][c].color().abbrev().equals("w")) {
+							score += 5;
+						} else {
+							score -= 5;
+						}
+					}
+
+					if (_board[r][c].type().abbrev().equals("qu")) {
+						if (_board[r][c].color().abbrev().equals("w")) {
+							score += 9;
+						} else {
+							score -= 9;
+						}
+					}
+				}
+			}
+		}
     
 
     /** Undoes the last move in the game. */
