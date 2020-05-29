@@ -7,8 +7,27 @@ Knight = 3
 Bishop = 3
 Rook = 5
 Queen = 9
+*Multiply all of these values by some factor
 
 "Score": Sum of white piece values - Sum of black piece values
+
+Controlling center squares is better than not controlling center squares
+  If a piece attacks e4, e5, d4, d5 (add/subtract x value to score)
+  
+Attacking enemy pieces is better than not attacking enemy pieces
+  If a piece attacks an enemy piece but can't be disadvantageously taken in the very next move (add/subtract x value to score)
+  
+Bishops controlling diagonals are good
+  If a bishop controls a diagonal that has <=2 pawns on it (a "good" diagonal) (add/subtract x value to score)
+  If both bishops of one player control "good" diagonals (add/subtract 2x + y value to score)
+  
+King safety is extremely important
+  If the king is in the center while queens are still on the board (add/subtract x value to score)
+  If the king is castled (add/subtract x value to score)
+  
+  
+
+
 
 
 
