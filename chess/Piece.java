@@ -17,6 +17,9 @@ public interface Piece {
     /** Returns whether the cell at column A and row B is a valid
       * destination for a move by the piece, and makes the move if valid. */
     boolean makeValidMove(int a, int b);
+    
+    /** makes a move, and returns the move and whether it was valid*/
+    MoveValidityPair outputPairAndMove(int a, int b);
 
     /** Returns whether this piece has a valid move to play. */
     boolean hasMove();
