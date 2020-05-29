@@ -58,6 +58,33 @@ public class Rook implements Piece {
             return false;
         }
     }
+    
+    public MoveValidityPair outputPairAndMove(int a, int b) {
+    	if (_game.get(a, b) != null
+                && _game.get(a, b).color() == _color) {
+                return new MoveValidityPair(null, false);
+            } else if (a == _x) {
+                int dir = (b - _y) / Math.abs(b - _y);
+                for (int i = _y + dir; i != b; i += dir) {
+                    if (_game.get(_x, i) != null) {
+                        return new MoveValidityPair(null, false);
+                    }
+                }
+                Move move = new SingleMove(this, _x, _y, _game.get(a, b), a, b);
+                return new MoveValidityPair(move, makeMoveCareful(move));
+            } else if (b == _y) {
+                int dir = (a - _x) / Math.abs(a - _x);
+                for (int i = _x + dir; i != a; i += dir) {
+                    if (_game.get(i, _y) != null) {
+                        return new MoveValidityPair(null, false);
+                    }
+                }
+                Move move = new SingleMove(this, _x, _y, _game.get(a, b), a, b);
+                return new MoveValidityPair(move, makeMoveCareful(move));
+            } else {
+                return new MoveValidityPair(null, false);
+            }
+    }
 
     @Override
     public void setLocation(int x, int y) {
