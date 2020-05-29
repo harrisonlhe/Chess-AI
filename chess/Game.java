@@ -31,6 +31,61 @@ class Game {
     public void quit() {
         System.exit(0);
     }
+    
+   /** Very simple material counter, coded by us */
+	public int simpleEval() {
+		int score = 0;
+		for (int r = 0; r < 8; r++) {
+			for (int c = 0; c < 8; c++) {
+				if (!(_board[r][c] == null)) {
+
+					if (_board[r][c] instanceof Pawn) {
+						if (_board[r][c].color().abbrev() == "w") {
+							score++;
+						} else {
+							score--;
+						}
+					}
+
+					if (_board[r][c] instanceof Knight || _board[r][c] instanceof Bishop) {
+						if (_board[r][c].color().abbrev() == "w") {
+							score += 3;
+						} else {
+							score -= 3;
+						}
+					}
+
+					if (_board[r][c] instanceof Rook) {
+						if (_board[r][c].color().abbrev() == "w") {
+							score += 5;
+						} else {
+							score -= 5;
+						}
+					}
+
+					if (_board[r][c] instanceof Queen) {
+						if (_board[r][c].color().abbrev() == "w") {
+							score += 9;
+						} else {
+							score -= 9;
+						}
+					}
+				}
+			}
+		}
+		
+		//Some checkmate checker, an error on the first move with StackOverflow Error?
+//		if (this.noMoves() && inCheck(this.turn())) {
+//			if (turn().opposite().abbrev().equals("w")) {
+//				score = Integer.MAX_VALUE;
+//			} else {
+//				score = Integer.MIN_VALUE;
+//			}
+//		}
+		
+		return score;
+	}
+    
 
     /** Undoes the last move in the game. */
     public void undoMove() {
