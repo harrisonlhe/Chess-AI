@@ -46,6 +46,20 @@ public class Knight implements Piece {
         }
     }
 
+    public MoveValidityPair outputPairAndMove(int a, int b) {
+        if (_game.get(a, b) != null
+            && _game.get(a, b).color() == _color) {
+            return new MoveValidityPair(null, false);
+        } else if ((Math.abs(a - _x) == 2 && Math.abs(b - _y) == 1)
+            || (Math.abs(b - _y) == 2 && Math.abs(a - _x) == 1)) {
+            SingleMove move = new SingleMove(this, _x, _y,
+                _game.get(a, b), a, b);
+            return new MoveValidityPair(move, makeMoveCareful(move));
+        } else {
+        	return new MoveValidityPair(null, false);
+        }
+    }
+    
     @Override
     public void setLocation(int x, int y) {
         _x = x;
