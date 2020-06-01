@@ -24,4 +24,10 @@ public class LocationPair {
 		}
 		return true;
 	}
+	
+	public String toString() {
+		return (posX + ", " + posY);
+		
+	}
+	
 }
