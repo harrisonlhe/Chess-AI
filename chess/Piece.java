@@ -29,5 +29,8 @@ public interface Piece {
 
     /** Sets the location of the piece to (X, Y) on the chessboard. */
     void setLocation(int x, int y);
+    
+    String getLocation();
+
 
 }
