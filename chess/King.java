@@ -171,6 +171,12 @@ public class King implements Piece {
             return 0;
         }
     }
+    
+     @Override
+    public String getLocation() {
+    	return (_x + ", " + _y);
+    }
+
 
     /** The game this piece belongs to. */
     private Game _game;
