@@ -100,6 +100,12 @@ public class Knight implements Piece {
             return true;
         }
     }
+    
+     @Override
+    public String getLocation() {
+    	return (_x + ", " + _y);
+    }
+
 
     /** The game this piece belongs to. */
     private Game _game;
