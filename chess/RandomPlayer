@@ -1,12 +1,13 @@
 package chess;
 
 public class RandomPlayer extends ChessPlayer{
-
-public RandomPlayer() {
+Game state;
+public RandomPlayer(Game g) {
+	state=g;
 }
 
-public Move getMove(Game current) {
-  			return current.listValidMoves().get((int)(current.listValidMoves().size()*Math.random()));
+public Move getMove() {
+  			return state.listValidMoves().get((int)(state.listValidMoves().size()*Math.random()));
 }
 
 }
