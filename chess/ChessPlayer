@@ -1,5 +1,6 @@
 package chess;
 
 public abstract class ChessPlayer {
-	public abstract Move getMove(Game state);
+	Game state;
+	public abstract Move getMove();
 }
