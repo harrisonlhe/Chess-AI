@@ -1,9 +1,11 @@
-public class randomPlayer extends ChessPlayer{
+import chess.*;
 
-public ChessPlayer() {
+public class RandomPlayer extends ChessPlayer{
+
+public RandomPlayer() {
 }
 
-public ChessMove getMove(Game current) {
+public Move getMove(Game current) {
   			return current.listValidMoves().get((int)(current.listValidMoves().size()*Math.random()));
 }
 
