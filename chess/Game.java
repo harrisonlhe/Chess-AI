@@ -17,6 +17,15 @@ public class Game {
         _gui = new ChessGUI("Chess", this);
         newGame();
     }
+	
+    Game(Game g){ //deep clones g
+    	_moves = new ArrayList<Move>();
+    	_gui=null;
+        newGame();
+        _turn=g.turn().abbrev().contentEquals("b") ? BLACK : WHITE;
+        _selectedX=g._selectedX;
+        _selectedY=g._selectedY;
+    }
 
     /** Clears the game and starts a new one. */
     public void newGame() {
@@ -25,6 +34,20 @@ public class Game {
         _turn = WHITE;
         _selectedX = -1;
         _selectedY = -1;
+    }
+	
+    public void clonePieces(Game g) {
+    	for(int x=0; x<8; x++) {
+        	for(int y=0; y<8; y++) {
+        		if(g._board[x][y]!=null)
+            	_board[x][y]=g.board()[x][y].dclone(this);
+            }
+        }
+    	/** Stores the black king. */
+        _blackKi=(King)g._blackKi.dclone(this);
+
+        /** Stores the white king. */
+        _whiteKi=(King)g._whiteKi.dclone(this);
     }
 
     /** Quits the game. */
@@ -136,6 +159,13 @@ public class Game {
             makeMove(lastMove.undoMove());
             _moves.remove(_moves.size() - 1);
         }
+    }
+		
+    public Game applyMoveCloning(Move move) {
+    	Game g=new Game(this);
+    	g.clonePieces(this);
+    	g.makeMove(move);
+    	return g;
     }
 
     /** Makes the move MOVE on the board. Assumes that it is valid. */
