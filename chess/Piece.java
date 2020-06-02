@@ -10,6 +10,8 @@ public interface Piece {
 
     /** Returns the color of this piece. */
     PieceColor color();
+  
+    Piece dclone(Game g);
 
     /** Returns the type of this piece (e.g. Queen). */
     PieceType type();
