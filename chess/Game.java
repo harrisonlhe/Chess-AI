@@ -150,7 +150,96 @@ public class Game {
 				}
 			}
 		}
-    
+    public double complexEval() {
+	double score = 0;
+	for (int r = 0; r < 8; r++) {
+		for (int c = 0; c < 8; c++) {
+			if (!(_board[r][c] == null)) {
+				//Pawns controlling the center is good!
+				//If pawns control e4, d4, e5, or d5, at +0.3 to the score
+				if (_board[2][5] instanceof Pawn || _board[4][5] instanceof Pawn || _board[3][5] instanceof Pawn || _board[5][5] instanceof Pawn)) {
+					if (_board[2][5].color.abbrev() == "w" || _board[4][5].color.abbrev() == "w" || _board[3][5].color.abbrev() == "w" || _board[5][5].color.abbrev() == "w") {
+						score += 0.3;
+					}
+					else {
+						score -= 0.3;
+					}
+				}
+				if (_board[4][4] instanceof Pawn || _board[5][4] instanceof Pawn) {
+					if (_board[4][4].color.abbrev() == "w" || _board[5][4].color.abbrev() == "w") {
+						score += 0.6;
+					}
+					else {
+						score -= 0.6;
+					}
+				}
+				if (_board[r][c] instanceof Pawn) {
+					if (_board[r][c].color().abbrev() == "w") {
+						score++;
+					}
+					else {
+						score--;
+					}
+				}
+				//Queens
+				if (_board[r][c] instanceof Queen) {
+					if (_board[r][c].color().abbrev() == "w") {
+						score += 9;
+					}
+					else {
+						score -= 9;
+					}
+				}
+				//It is valuable to put the rooks in the center of the board!
+				if (_board[3][0] instanceof Rook || _board[4][0] instanceof Rook) {
+					if (_board[3][0].color().abbrev() == "w" || _board[4][0].color.abbrev() == "w") {
+						score += 0.5;
+					}
+				}
+				if (_board[3][7] instanceof Rook || _board[4][7] instanceof Rook) {
+					if (_board[3][7].color().abbrev() == "b" || _board[4][7].color().abbrev() == "b") {
+						score -= 0.5;
+					}
+				}
+				if (_board[r][c] instanceof Rook) {
+					if (_board[r][c].color().abbrev() == "w") {
+						score += 5;
+					}
+					else {
+						score -= 5;
+					}
+				}
+				//Minor pieces
+				if (_board[r][c] instanceof Knight) {
+					if (_board[r][c].color().abbrev() == "w") {
+						score += 3.2;
+					}
+					else {
+						score -= 3.2;
+					}
+				}
+				if (_board[1][6] instanceof Bishop || _board[6][6] instanceof Bishop) {
+					if (_board[1][6].color().abbrev() == "w" || _board[6][6].color().abbrev() == "w") {
+						score += 0.3;
+					}
+				}
+				if (_board[1][1] instanceof Bishop || _board[6][1] instanceof Bishop) {
+					if (_board[1][1].color().abbrev() == "b" || _board[6][1].color().abbrev() == "b") {
+						score -= 0.3;
+					}
+				}
+				if (_board[r][c] instanceof Bishop) {
+					if (_board[r][c].color.abbrev() == "w") {
+						score += 3;
+					}
+					else {
+						score -= 3;
+					}
+				}
+			}	
+		}
+	}
+}
 
     /** Undoes the last move in the game. */
     public void undoMove() {
