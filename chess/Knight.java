@@ -15,6 +15,11 @@ public class Knight implements Piece {
         _x = x;
         _y = y;
     }
+    
+    public Piece dclone(Game newGame) {
+    	Knight q=new Knight(_color, newGame, _x, _y);
+    	return q;
+    }
 
     @Override
     public String imageString() {
