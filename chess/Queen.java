@@ -20,7 +20,12 @@ public class Queen implements Piece {
     public String imageString() {
         return _color.abbrev() + QUEEN.abbrev();
     }
-
+    
+    public Piece dclone(Game newGame) {
+    	Queen q=new Queen(_color, newGame, _x, _y);
+    	return q;
+    }
+    
     @Override
     public PieceColor color() {
         return _color;
