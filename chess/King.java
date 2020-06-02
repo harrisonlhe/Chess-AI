@@ -16,6 +16,11 @@ public class King implements Piece {
         _y = y;
         _moved = false;
     }
+    
+    public Piece dclone(Game newGame) {
+    	King q=new King(_color, newGame, _x, _y);
+    	return q;
+    }
 
     @Override
     public String imageString() {
