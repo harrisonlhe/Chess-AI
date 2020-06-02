@@ -20,7 +20,12 @@ public class Rook implements Piece {
     public String imageString() {
         return _color.abbrev() + ROOK.abbrev();
     }
-
+    
+    public Piece dclone(Game newGame) {
+    	Rook q=new Rook(_color, newGame, _x, _y);
+    	return q;
+    }
+    
     @Override
     public PieceColor color() {
         return _color;
