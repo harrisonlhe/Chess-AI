@@ -18,7 +18,12 @@ public class Pawn implements Piece {
         _x = x;
         _y = y;
     }
-
+    
+    public Piece dclone(Game newGame) {
+    	Pawn q=new Pawn(_color, newGame, _x, _y);
+    	return q;
+    }
+    
     @Override
     public String imageString() {
         return _color.abbrev() + PAWN.abbrev();
