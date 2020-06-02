@@ -15,7 +15,12 @@ public class Bishop implements Piece {
         _x = x;
         _y = y;
     }
-
+    
+    public Piece dclone(Game newGame) {
+    	Bishop q=new Bishop(_color, newGame, _x, _y);
+    	return q;
+    }
+    
     @Override
     public String imageString() {
         return _color.abbrev() + BISHOP.abbrev();
