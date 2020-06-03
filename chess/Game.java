@@ -144,8 +144,6 @@ public class Game {
 				}
 			}
 		}
-		return score;
-    }
     
     public double complexEval() {
     	double score = 0;
