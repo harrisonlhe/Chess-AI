@@ -21,7 +21,7 @@ class ChessGUI extends TopLevel {
         addMenuButton("Options->Quit", "quit");
         addMenuButton("Options->Undo", "undo");
         addMenuButton("Options->New Game", "newGame");
-        _display = new GameDisplay(game);
+        _display = new GameDisplay(game); 
         add(_display, new LayoutSpec("y", 2, "width", 2));
         _display.setMouseHandler("press", this, "mousePressed");
         display(true);
@@ -48,6 +48,7 @@ class ChessGUI extends TopLevel {
 
     /** Action in response to mouse-pressed event EVENT. */
     public synchronized void mousePressed(MouseEvent event) {
+    	_display.repaint();
         if (_game.selectedX() == -1) {
             int pressedX = (event.getX() - MARGIN) / CELL;
             int pressedY = (event.getY() - MARGIN) / CELL;
@@ -63,7 +64,8 @@ class ChessGUI extends TopLevel {
             Piece selected = _game.get(_game.selectedX(), _game.selectedY());
             _game.setSelectedX(-1);
             _game.setSelectedY(-1);
-            repaint(selected.makeValidMove(releasedX, releasedY));
+            if(selected==null) {System.out.println("picked up piece is null!");}
+            else {repaint(selected.makeValidMove(releasedX, releasedY));}
         }
     }
 

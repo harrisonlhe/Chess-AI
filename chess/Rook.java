@@ -1,5 +1,7 @@
 package chess;
 
+import static chess.PieceColor.BLACK;
+import static chess.PieceColor.WHITE;
 import static chess.PieceType.*;
 
 /** A rook in a chess game.
@@ -21,14 +23,25 @@ public class Rook implements Piece {
         return _color.abbrev() + ROOK.abbrev();
     }
     
-    public Piece dclone(Game newGame) {
-    	Rook q=new Rook(_color, newGame, _x, _y);
-    	return q;
+    @Override
+    public int getX() {
+    	return _x;
+    }
+    
+    @Override
+    public int getY() {
+    	return _y;
     }
     
     @Override
     public PieceColor color() {
         return _color;
+    }
+    
+    public Piece dclone(Game newGame) {
+    	PieceColor c=_color.abbrev().contentEquals("b") ? BLACK : WHITE;
+    	Rook q=new Rook(c, newGame, _x+0, _y+0);
+    	return q;
     }
 
     @Override

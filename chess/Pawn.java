@@ -1,5 +1,7 @@
 package chess;
 
+import static chess.PieceColor.BLACK;
+import static chess.PieceColor.WHITE;
 import static chess.PieceType.PAWN;
 
 import java.util.ArrayList;
@@ -18,15 +20,16 @@ public class Pawn implements Piece {
         _x = x;
         _y = y;
     }
-    
-    public Piece dclone(Game newGame) {
-    	Pawn q=new Pawn(_color, newGame, _x, _y);
-    	return q;
-    }
-    
+
     @Override
     public String imageString() {
         return _color.abbrev() + PAWN.abbrev();
+    }
+    
+    public Piece dclone(Game newGame) {
+    	PieceColor c=_color.abbrev().contentEquals("b") ? BLACK : WHITE;
+    	Pawn q=new Pawn(c, newGame, _x+0, _y+0);
+    	return q;
     }
 
     @Override
@@ -37,6 +40,16 @@ public class Pawn implements Piece {
     @Override
     public PieceType type() {
         return PAWN;
+    }
+    
+    @Override
+    public int getX() {
+    	return _x;
+    }
+    
+    @Override
+    public int getY() {
+    	return _y;
     }
 
     @Override

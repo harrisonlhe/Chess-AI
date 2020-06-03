@@ -17,6 +17,20 @@ public class SingleMove implements Move {
         _y2 = y2;
         _replace = null;
     }
+    
+    public Move dclone(Game g) { //g is new game
+    	SingleMove copy;
+    	Piece selected = _selected==null ? null : _selected.dclone(g);
+        int x1 = _x1+0;
+        int y1 = _y1+0;
+        Piece target = _target==null ? null : _target.dclone(g);
+        int x2 = _x2+0;
+        int y2 = _y2+0;
+        Piece replace = _replace==null ? null : _replace.dclone(g);
+    	if(replace==null)  copy=new SingleMove(selected,x1,y1,target,x2,y2); 
+    	else  copy=new SingleMove(selected,x1,y1,target,x2,y2,replace);  
+    	return copy;
+    }
 
     /** Constructs a new move on the board by selected piece S,
       * onto the target piece T, from the cell at (X1, Y1) to
