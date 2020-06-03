@@ -1,5 +1,7 @@
 package chess;
 
+import static chess.PieceColor.BLACK;
+import static chess.PieceColor.WHITE;
 import static chess.PieceType.*;
 
 /** A queen in a chess game.
@@ -15,17 +17,28 @@ public class Queen implements Piece {
         _x = x;
         _y = y;
     }
-
+    
+    @Override
+    public int getX() {
+    	return _x;
+    }
+    
+    @Override
+    public int getY() {
+    	return _y;
+    }
+    
     @Override
     public String imageString() {
         return _color.abbrev() + QUEEN.abbrev();
     }
     
     public Piece dclone(Game newGame) {
-    	Queen q=new Queen(_color, newGame, _x, _y);
+    	PieceColor c=_color.abbrev().contentEquals("b") ? BLACK : WHITE;
+    	Queen q=new Queen(c, newGame, _x+0, _y+0);
     	return q;
     }
-    
+
     @Override
     public PieceColor color() {
         return _color;

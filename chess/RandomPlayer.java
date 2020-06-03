@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.List;
+
 public class RandomPlayer extends ChessPlayer{
 Game state;
 public RandomPlayer(Game g) {
@@ -7,7 +9,8 @@ public RandomPlayer(Game g) {
 }
 
 public Move getMove() {
-  			return state.listValidMoves().get((int)(state.listValidMoves().size()*Math.random()));
+	List<Move> moves=state.listValidMoves();
+  			return moves.get((int)(moves.size()*Math.random()));
 }
 
 }

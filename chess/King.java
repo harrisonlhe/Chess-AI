@@ -1,5 +1,7 @@
 package chess;
 
+import static chess.PieceColor.BLACK;
+import static chess.PieceColor.WHITE;
 import static chess.PieceType.*;
 
 /** A king in a chess game.
@@ -16,15 +18,16 @@ public class King implements Piece {
         _y = y;
         _moved = false;
     }
-    
-    public Piece dclone(Game newGame) {
-    	King q=new King(_color, newGame, _x, _y);
-    	return q;
-    }
 
     @Override
     public String imageString() {
         return _color.abbrev() + KING.abbrev();
+    }
+    
+    public Piece dclone(Game newGame) {
+    	PieceColor c=_color.abbrev().contentEquals("b") ? BLACK : WHITE;
+    	King q=new King(c, newGame, _x+0, _y+0);
+    	return q;
     }
 
     @Override

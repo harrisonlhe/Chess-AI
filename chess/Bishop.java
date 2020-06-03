@@ -1,5 +1,7 @@
 package chess;
 
+import static chess.PieceColor.BLACK;
+import static chess.PieceColor.WHITE;
 import static chess.PieceType.*;
 
 /** A bishop in a chess game.
@@ -17,8 +19,19 @@ public class Bishop implements Piece {
     }
     
     public Piece dclone(Game newGame) {
-    	Bishop q=new Bishop(_color, newGame, _x, _y);
+    	PieceColor c=_color.abbrev().contentEquals("b") ? BLACK : WHITE;
+    	Bishop q=new Bishop(c, newGame, _x+0, _y+0);
     	return q;
+    }
+    
+    @Override
+    public int getX() {
+    	return _x;
+    }
+    
+    @Override
+    public int getY() {
+    	return _y;
     }
     
     @Override
