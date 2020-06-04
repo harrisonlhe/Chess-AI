@@ -145,57 +145,185 @@ public class Game {
 			}
 		}
     
-    public double complexEval() {
-    	double score = 0;
-    	int materialScore = this.simpleEval1();
-    	score = materialScore;
+public double complexEval() {
+	double score = 0;
+	int materialScore = this.simpleEval1();
+	score = materialScore;
 
-    	//Pawns
-    	boolean wPawnAtC3 = false;
-    	boolean wPawnAtD3 = false;
-    	boolean wPawnAtE3 = false;
-    	boolean wPawnAtF3 = false;
-    	boolean wPawnAtD4 = false;
-    	boolean wPawnAtE4 = false;			
-    	if (_board[2][5] != null && _board[2][5] instanceof Pawn) {
-    		if (_board[2][5].color().abbrev() == "w") {
-    			wPawnAtC3 = true;
-    		}
-    	}
-    	if (_board[3][5] != null && _board[3][5] instanceof Pawn) {
-    		if (_board[3][5].color().abbrev() == "w") {
-    			wPawnAtD3 = true;
-    		}
-    	}
-    	if (_board[4][5] != null && _board[4][5] instanceof Pawn) {
-    		if (_board[4][5].color().abbrev() == "w") {
-    			wPawnAtE3 = true;
-    		}
-    	}
-    	if (_board[5][5] != null && _board[4][5] instanceof Pawn) {
-    		if (_board[5][5].color().abbrev() == "w") {
-    			wPawnAtF3 = true;
-    		}
-    	}
-    	if (_board[4][4] != null && _board[4][4] instanceof Pawn) {
-    		if (_board[4][4].color().abbrev() == "w") {
-    			wPawnAtD4 = true;
-    		}
-    	}
-    	if (_board[5][4] != null && _board[5][4] instanceof Pawn) {
-    		if (_board[5][4].color().abbrev() == "w") {
-    			wPawnAtE4 = true;
-    		}
-    	}
+	//White Pawns
+	boolean wPawnAtC3 = false;
+	boolean wPawnAtD3 = false;
+	boolean wPawnAtE3 = false;
+	boolean wPawnAtF3 = false;
+	boolean wPawnAtD4 = false;
+	boolean wPawnAtE4 = false;			
+	if (_board[2][5] != null && _board[2][5] instanceof Pawn) {
+		if (_board[2][5].color().abbrev() == "w") {
+			wPawnAtC3 = true;
+		}
+	}
+	if (_board[3][5] != null && _board[3][5] instanceof Pawn) {
+		if (_board[3][5].color().abbrev() == "w") {
+			wPawnAtD3 = true;
+		}
+	}
+	if (_board[4][5]) != null && _board[4][5] instanceof Pawn) {
+		if (_board[4][5].color().abbrev() == "w") {
+			wPawnAtE3 = true;
+		}
+	}
+	if (_board[5][5] != null && _board[4][5] instanceof Pawn) {
+		if (_board[5][5].color().abbrev() == "w") {
+			wPawnAtF3 = true;
+		}
+	}
+	if (_board[3][4] != null && _board[3][4] instanceof Pawn) {
+		if (_board[3][4].color().abbrev() == "w") {
+			wPawnAtD4 = true;
+		}
+	}
+	if (_board[4][4] != null && _board[4][4] instanceof Pawn) {
+		if (_board[4][4].color().abbrev() == "w") {
+			wPawnAtE4 = true;
+		}
+	}
 
-    	if (wPawnAtC3 || wPawnAtD3 || wPawnAtE3 || wPawnAtF3) {
-    		score += 0.3;
-    	}
-    	if (wPawnAtD4 || wPawnAtE4) {
-    		score += 0.6;
-    	}
-    	return score;
-    }
+	if (wPawnAtC3 || wPawnAtD3 || wPawnAtE3 || wPawnAtF3) {
+		score += 0.3;
+	}
+	if (wPawnAtD4 || wPawnAtE4) {
+		score += 0.6;
+	}
+	//Black Pawns
+	boolean bPawnAtC6 = false;
+	boolean bPawnAtD6 = false;
+	boolean bPawnAtE6 = false;
+	boolean bPawnAtF6 = false;
+	boolean bPawnAtD5 = false;
+	boolean bPawnAtE5 = false;
+	if (_board[2][2] != null && _board[2][2] instanceof Pawn) {
+		if (_board[2][2].color().abbrev() == "b") {
+			bPawnAtC6 = true;
+		}
+	}
+	if (_board[3][2] != null && _board[3][2] instanceof Pawn) {
+		if (_board[3][2].color().abbrev() == "b") {
+			bPawnAtD6 = true;
+		}
+	}
+	if (_board[4][2] != null && _board[4][2] instanceof Pawn) {
+		if (_board[4][2].color().abbrev() == "b") {
+			bPawnAtE6 = true;
+		}
+	}
+	if (_board[5][2] != null && _board[5][2] instanceof Pawn) {
+		if (_board[5][2].color().abbrev() == "b") {
+			bPawnAtF6 = true;
+		}
+	}
+	if (_board[3][3] != null && _board[3][3] instanceof Pawn) {
+		if (_board[3][3].color().abbrev() == "b") {
+			bPawnAtD5 = true;
+		}
+	}
+	if (_board[4][3] != null && _board[4][3] instanceof Pawn) {
+		if (_board[4][3].color().abbrev() == "b") {
+			bPawnAtE5 = true;
+		}
+	}
+
+	if (bPawnAtC6 || bPawnAtD6 || bPawnAtE6 || bPawnAtF6) {
+		score -= 0.3;
+	}
+	if (bPawnAtD5 || bPawnAtE5) {
+		score -= 0.6;
+	}
+	//King safety
+	boolean wKingOnG1 = false;
+	boolean bKingOnG8 = false;
+	if (_board[6][7] != null && _board[6][7] instanceof King) {
+		if (_board[6][7].color().abbrev() == "w") {
+			wKingOnG1 = true;
+		}
+	}
+	if (_board[6][0] != null && _board[6][0] instanceof King) {
+		if (_board[6][0].color().abbrev() == "b") {
+			bKingOnG8 = true;
+		}
+	}
+	if (wKingOnG1) {
+		score += 1.0;
+	}
+	if (bKingOnG8) {
+		score -= 1.0;
+	}
+	//Rooks should be in the center of the board
+	boolean wRookOnD1 = false;
+	boolean wRookOnE1 = false;
+	boolean bRookOnD8 = false;
+	boolean bRookOnE8 = false;
+	if (_board[3][7] != null && _board[3][7] instanceof Rook) {
+		if (board[3][7].color().abbrev() == "w") {
+			wRookOnD1 = true;
+		}
+	}
+	if (_board[4][7] != null && _board[4][7] instanceof Rook) {
+		if (board[4][7].color().abbrev() == "w") {
+			wRookOnE1 = true;
+		}
+	}
+	if (_board[3][0] != null && _board[3][0] instanceof Rook) {
+		if (board[3][0].color().abbrev() == "b") {
+			bRookOnD8 = true;
+		}
+	}
+	if (_board[4][0] != null && _board[4][0] instanceof Rook) {
+		if (board[4][0].color().abbrev() == "b") {
+			bRookOnE8 = true;
+		}
+	}
+	if (wRookOnD1 || wRookOnE1) {
+		score += 0.5;
+	}
+	if (bRookOnD8 || bRookOnE8) {
+		score -= 0.5;
+	}
+	//Bishops should be fianchettoed
+	boolean wBishopOnG2 = false;
+	boolean wBishopOnB2 = false;
+	boolean bBishopOnG7 = false;
+	boolean bBishopOnB7 = false;
+	if (_board[6][6] != null && _board[6][6] instanceof Bishop) {
+		if (_board[6][6].color().abbrev() == "w") {
+			wBishopOnG2 = true;
+		}
+	}
+	if (_board[1][6] != null && _board[1][6] instanceof Bishop) {
+		if (_board[1][6].color().abbrev() == "w") {
+			wBishopOnB2 = true;
+		}
+	}
+	if (_board[6][1] != null && _board[6][1] instanceof Bishop) {
+		if (_board[6][1].color().abbrev() == "b") {
+			bBishopOnG7 = true;
+		}
+	}
+	if (_board[1][1] != null && _board[1][1] instanceof Bishop) {
+		if (_board[1][1].color().abbrev() == "b") {
+			bBishopOnB7 = true;
+		}
+	}
+	if (wBishopOnG2 || wBishopOnB2) {
+		score += 0.7;
+	}
+	if (bBishopOnG7 || bBishopOnB7) {
+		score -= 0.7;
+	}
+
+
+
+	return score;
+}
 
 			
 
