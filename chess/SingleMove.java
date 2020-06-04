@@ -27,9 +27,30 @@ public class SingleMove implements Move {
         int x2 = _x2+0;
         int y2 = _y2+0;
         Piece replace = _replace==null ? null : _replace.dclone(g);
-    	if(replace==null)  copy=new SingleMove(selected,x1,y1,target,x2,y2); 
-    	else  copy=new SingleMove(selected,x1,y1,target,x2,y2,replace);  
+    	//if(replace==null)  copy=new SingleMove(selected,x1,y1,target,x2,y2); 
+    	/*else*/  copy=new SingleMove(selected,x1,y1,target,x2,y2,replace);  
     	return copy;
+    }
+    
+    public Move changeBoard(Game g) {
+    	/** The piece being moved in this move. */
+    	
+        Piece sel=g.board()[_x1][_y1];
+
+        /** The piece at the move destination. */
+        
+        Piece targ=null;
+        if(_target!=null && g.board()[_x2][_y2]!=null) targ=g.board()[_x2][_y2];
+       
+        
+        /** THe piece that will replace the moved piece after the move. */
+        Piece rep=null;
+       	if(_replace!=null && g.board()[_replace.getX()][_replace.getY()]!=null) {
+       		rep=g.board()[_replace.getX()][_replace.getY()];
+        }
+
+        Move m=new SingleMove(sel,_x1+0,_y1+0,targ,_x2+0,_y2+0, rep);
+        return m;
     }
 
     /** Constructs a new move on the board by selected piece S,

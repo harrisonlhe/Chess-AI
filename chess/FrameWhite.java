@@ -2,15 +2,15 @@ package chess;
 
 import java.util.TimerTask;
 
-public class Frame extends TimerTask {
+public class FrameWhite extends TimerTask {
 	Game game;
 	ChessPlayer player;
-	public Frame(Game g, ChessPlayer r) {
+	public FrameWhite(Game g, ChessPlayer r) {
 		game=g;
 		player=r;
 	}
 	public void run() {
-		if(game.turn().string().contentEquals("BLACK")) {
+		if(game.turn().string().contentEquals("WHITE")) {
 			Move m=player.getMove();
         	/*if(m.isDouble()) {
         		DoubleMove mD=(DoubleMove)m;
@@ -26,8 +26,7 @@ public class Frame extends TimerTask {
         	//System.out.println("moved");
         	//System.out.println(game._original);
         	//game.printNonPhantomBoard();
-        	//game.checkPhantom(false);
-        	
+        	//game.checkPhantom();
     	}
 		//else {
 			//game.printNonPhantomBoard();

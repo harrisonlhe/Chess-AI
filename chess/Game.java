@@ -26,35 +26,44 @@ public class Game {
     
     Game(Game nG){ //deep clones g
     	_moves = new ArrayList<Move>();
+    	_board=new Piece[8][8];
     	//_gui=null;
-        newGame();
+        //newGame();
         
     }
     
     public void clonePieces(Game g, Game nG) { //g is old game, this is new game
-    	_turn=g.turn().abbrev().contentEquals("b") ? BLACK : WHITE;
-        _selectedX=g._selectedX;
-        _selectedY=g._selectedY;
+    	nG._turn=g.turn().abbrev().contentEquals("b") ? BLACK : WHITE;
+        nG._selectedX=g._selectedX;
+        nG._selectedY=g._selectedY;
     	for(int x=0; x<8; x++) {
         	for(int y=0; y<8; y++) {
         		if(g._board[x][y]!=null)
-            	_board[x][y]=g.board()[x][y].dclone(nG);
+        		{
+        			nG._board[x][y]=g._board[x][y].dclone(nG);
+        		}
+        		else {
+        			nG._board[x][y]=null;
+        		}
             }
         }
     	/** Stores the black king. */
-        _blackKi=(King)g._blackKi.dclone(nG);
+        nG._blackKi=(King)this.board()[g.kingX(BLACK)][g.kingY(BLACK)];
 
         /** Stores the white king. */
-        _whiteKi=(King)g._whiteKi.dclone(nG);
+        nG._whiteKi=(King)this.board()[g.kingX(WHITE)][g.kingY(WHITE)];
+        
+        
         for(int i=0; i<g._moves.size(); i++) {
-        	SingleMove m=(SingleMove) g._moves.get(i);
-        	_moves.add(m.dclone(nG));
+        	Move m=g._moves.get(i);
+        	nG._moves.add(m.changeBoard(nG));
         }
     }
 
     /** Clears the game and starts a new one. */
     public void newGame() {
-        initializeBoard();
+        //initializeBoard();
+    	initializeBoard();
         _moves.clear();
         _turn = WHITE;
         _selectedX = -1;
@@ -63,12 +72,32 @@ public class Game {
     
     public Game applyMoveCloning(Move move) {
     	Game nG=new Game(this); //this is old game
+    	
+    	int prevPieces=this.countPieces();
+    	
     	nG.clonePieces(this, nG); //nG is new game
-    	SingleMove m=(SingleMove)move;
-    	m=(SingleMove)m.dclone(nG);
-    	nG.makeMove(m);
+    	int newPieces=nG.countPieces();
+    	
+    	Move mNew=move.changeBoard(nG);
+    	
+    	nG.makeMove(mNew);
+    	nG._turn=this.turn().opposite();
     	//System.out.println("created game clone");
+    	
+    	if(prevPieces<newPieces) {
+    		//System.out.println("new piece appeared???");
+    	}
     	return nG;
+    }
+    
+    public int countPieces() {
+    	int count=0;
+    	for(int row=0; row<8; row++) {
+    		for(int x=0; x<8; x++) {
+    			if(_board[x][row]!=null) count++;
+    		}
+    	}
+    	return count;
     }
 
     /** Quits the game. */
@@ -141,191 +170,200 @@ public class Game {
 							score -= 9;
 						}
 					}
+					
+					if (_board[r][c].type().abbrev().equals("ki")) {
+						if (_board[r][c].color().abbrev().equals("w")) {
+							score += 1000;
+						} else {
+							score -= 1000;
+						}
+					}
 				}
 			}
 		}
-    
-public double complexEval() {
-	double score = 0;
-	int materialScore = this.simpleEval1();
-	score = materialScore;
+		return score;
+    }
+ 
+    public double complexEval() {
+    	double score = 0;
+    	int materialScore = this.simpleEval1();
+    	score = materialScore;
 
-	//White Pawns
-	boolean wPawnAtC3 = false;
-	boolean wPawnAtD3 = false;
-	boolean wPawnAtE3 = false;
-	boolean wPawnAtF3 = false;
-	boolean wPawnAtD4 = false;
-	boolean wPawnAtE4 = false;			
-	if (_board[2][5] != null && _board[2][5] instanceof Pawn) {
-		if (_board[2][5].color().abbrev() == "w") {
-			wPawnAtC3 = true;
-		}
-	}
-	if (_board[3][5] != null && _board[3][5] instanceof Pawn) {
-		if (_board[3][5].color().abbrev() == "w") {
-			wPawnAtD3 = true;
-		}
-	}
-	if (_board[4][5]) != null && _board[4][5] instanceof Pawn) {
-		if (_board[4][5].color().abbrev() == "w") {
-			wPawnAtE3 = true;
-		}
-	}
-	if (_board[5][5] != null && _board[4][5] instanceof Pawn) {
-		if (_board[5][5].color().abbrev() == "w") {
-			wPawnAtF3 = true;
-		}
-	}
-	if (_board[3][4] != null && _board[3][4] instanceof Pawn) {
-		if (_board[3][4].color().abbrev() == "w") {
-			wPawnAtD4 = true;
-		}
-	}
-	if (_board[4][4] != null && _board[4][4] instanceof Pawn) {
-		if (_board[4][4].color().abbrev() == "w") {
-			wPawnAtE4 = true;
-		}
-	}
+    	//White Pawns
+    	boolean wPawnAtC3 = false;
+    	boolean wPawnAtD3 = false;
+    	boolean wPawnAtE3 = false;
+    	boolean wPawnAtF3 = false;
+    	boolean wPawnAtD4 = false;
+    	boolean wPawnAtE4 = false;			
+    	if (_board[2][5] != null && _board[2][5] instanceof Pawn) {
+    		if (_board[2][5].color().abbrev() == "w") {
+    			wPawnAtC3 = true;
+    		}
+    	}
+    	if (_board[3][5] != null && _board[3][5] instanceof Pawn) {
+    		if (_board[3][5].color().abbrev() == "w") {
+    			wPawnAtD3 = true;
+    		}
+    	}
+    	if (_board[4][5] != null && _board[4][5] instanceof Pawn) {
+    		if (_board[4][5].color().abbrev() == "w") {
+    			wPawnAtE3 = true;
+    		}
+    	}
+    	if (_board[5][5] != null && _board[4][5] instanceof Pawn) {
+    		if (_board[5][5].color().abbrev() == "w") {
+    			wPawnAtF3 = true;
+    		}
+    	}
+    	if (_board[3][4] != null && _board[3][4] instanceof Pawn) {
+    		if (_board[3][4].color().abbrev() == "w") {
+    			wPawnAtD4 = true;
+    		}
+    	}
+    	if (_board[4][4] != null && _board[4][4] instanceof Pawn) {
+    		if (_board[4][4].color().abbrev() == "w") {
+    			wPawnAtE4 = true;
+    		}
+    	}
 
-	if (wPawnAtC3 || wPawnAtD3 || wPawnAtE3 || wPawnAtF3) {
-		score += 0.3;
-	}
-	if (wPawnAtD4 || wPawnAtE4) {
-		score += 0.6;
-	}
-	//Black Pawns
-	boolean bPawnAtC6 = false;
-	boolean bPawnAtD6 = false;
-	boolean bPawnAtE6 = false;
-	boolean bPawnAtF6 = false;
-	boolean bPawnAtD5 = false;
-	boolean bPawnAtE5 = false;
-	if (_board[2][2] != null && _board[2][2] instanceof Pawn) {
-		if (_board[2][2].color().abbrev() == "b") {
-			bPawnAtC6 = true;
-		}
-	}
-	if (_board[3][2] != null && _board[3][2] instanceof Pawn) {
-		if (_board[3][2].color().abbrev() == "b") {
-			bPawnAtD6 = true;
-		}
-	}
-	if (_board[4][2] != null && _board[4][2] instanceof Pawn) {
-		if (_board[4][2].color().abbrev() == "b") {
-			bPawnAtE6 = true;
-		}
-	}
-	if (_board[5][2] != null && _board[5][2] instanceof Pawn) {
-		if (_board[5][2].color().abbrev() == "b") {
-			bPawnAtF6 = true;
-		}
-	}
-	if (_board[3][3] != null && _board[3][3] instanceof Pawn) {
-		if (_board[3][3].color().abbrev() == "b") {
-			bPawnAtD5 = true;
-		}
-	}
-	if (_board[4][3] != null && _board[4][3] instanceof Pawn) {
-		if (_board[4][3].color().abbrev() == "b") {
-			bPawnAtE5 = true;
-		}
-	}
+    	if (wPawnAtC3 || wPawnAtD3 || wPawnAtE3 || wPawnAtF3) {
+    		score += 0.3;
+    	}
+    	if (wPawnAtD4 || wPawnAtE4) {
+    		score += 0.6;
+    	}
+    	//Black Pawns
+    	boolean bPawnAtC6 = false;
+    	boolean bPawnAtD6 = false;
+    	boolean bPawnAtE6 = false;
+    	boolean bPawnAtF6 = false;
+    	boolean bPawnAtD5 = false;
+    	boolean bPawnAtE5 = false;
+    	if (_board[2][2] != null && _board[2][2] instanceof Pawn) {
+    		if (_board[2][2].color().abbrev() == "b") {
+    			bPawnAtC6 = true;
+    		}
+    	}
+    	if (_board[3][2] != null && _board[3][2] instanceof Pawn) {
+    		if (_board[3][2].color().abbrev() == "b") {
+    			bPawnAtD6 = true;
+    		}
+    	}
+    	if (_board[4][2] != null && _board[4][2] instanceof Pawn) {
+    		if (_board[4][2].color().abbrev() == "b") {
+    			bPawnAtE6 = true;
+    		}
+    	}
+    	if (_board[5][2] != null && _board[5][2] instanceof Pawn) {
+    		if (_board[5][2].color().abbrev() == "b") {
+    			bPawnAtF6 = true;
+    		}
+    	}
+    	if (_board[3][3] != null && _board[3][3] instanceof Pawn) {
+    		if (_board[3][3].color().abbrev() == "b") {
+    			bPawnAtD5 = true;
+    		}
+    	}
+    	if (_board[4][3] != null && _board[4][3] instanceof Pawn) {
+    		if (_board[4][3].color().abbrev() == "b") {
+    			bPawnAtE5 = true;
+    		}
+    	}
 
-	if (bPawnAtC6 || bPawnAtD6 || bPawnAtE6 || bPawnAtF6) {
-		score -= 0.3;
-	}
-	if (bPawnAtD5 || bPawnAtE5) {
-		score -= 0.6;
-	}
-	//King safety
-	boolean wKingOnG1 = false;
-	boolean bKingOnG8 = false;
-	if (_board[6][7] != null && _board[6][7] instanceof King) {
-		if (_board[6][7].color().abbrev() == "w") {
-			wKingOnG1 = true;
-		}
-	}
-	if (_board[6][0] != null && _board[6][0] instanceof King) {
-		if (_board[6][0].color().abbrev() == "b") {
-			bKingOnG8 = true;
-		}
-	}
-	if (wKingOnG1) {
-		score += 1.0;
-	}
-	if (bKingOnG8) {
-		score -= 1.0;
-	}
-	//Rooks should be in the center of the board
-	boolean wRookOnD1 = false;
-	boolean wRookOnE1 = false;
-	boolean bRookOnD8 = false;
-	boolean bRookOnE8 = false;
-	if (_board[3][7] != null && _board[3][7] instanceof Rook) {
-		if (board[3][7].color().abbrev() == "w") {
-			wRookOnD1 = true;
-		}
-	}
-	if (_board[4][7] != null && _board[4][7] instanceof Rook) {
-		if (board[4][7].color().abbrev() == "w") {
-			wRookOnE1 = true;
-		}
-	}
-	if (_board[3][0] != null && _board[3][0] instanceof Rook) {
-		if (board[3][0].color().abbrev() == "b") {
-			bRookOnD8 = true;
-		}
-	}
-	if (_board[4][0] != null && _board[4][0] instanceof Rook) {
-		if (board[4][0].color().abbrev() == "b") {
-			bRookOnE8 = true;
-		}
-	}
-	if (wRookOnD1 || wRookOnE1) {
-		score += 0.5;
-	}
-	if (bRookOnD8 || bRookOnE8) {
-		score -= 0.5;
-	}
-	//Bishops should be fianchettoed
-	boolean wBishopOnG2 = false;
-	boolean wBishopOnB2 = false;
-	boolean bBishopOnG7 = false;
-	boolean bBishopOnB7 = false;
-	if (_board[6][6] != null && _board[6][6] instanceof Bishop) {
-		if (_board[6][6].color().abbrev() == "w") {
-			wBishopOnG2 = true;
-		}
-	}
-	if (_board[1][6] != null && _board[1][6] instanceof Bishop) {
-		if (_board[1][6].color().abbrev() == "w") {
-			wBishopOnB2 = true;
-		}
-	}
-	if (_board[6][1] != null && _board[6][1] instanceof Bishop) {
-		if (_board[6][1].color().abbrev() == "b") {
-			bBishopOnG7 = true;
-		}
-	}
-	if (_board[1][1] != null && _board[1][1] instanceof Bishop) {
-		if (_board[1][1].color().abbrev() == "b") {
-			bBishopOnB7 = true;
-		}
-	}
-	if (wBishopOnG2 || wBishopOnB2) {
-		score += 0.7;
-	}
-	if (bBishopOnG7 || bBishopOnB7) {
-		score -= 0.7;
-	}
+    	if (bPawnAtC6 || bPawnAtD6 || bPawnAtE6 || bPawnAtF6) {
+    		score -= 0.3;
+    	}
+    	if (bPawnAtD5 || bPawnAtE5) {
+    		score -= 0.6;
+    	}
+    	//King safety
+    	boolean wKingOnG1 = false;
+    	boolean bKingOnG8 = false;
+    	if (_board[6][7] != null && _board[6][7] instanceof King) {
+    		if (_board[6][7].color().abbrev() == "w") {
+    			wKingOnG1 = true;
+    		}
+    	}
+    	if (_board[6][0] != null && _board[6][0] instanceof King) {
+    		if (_board[6][0].color().abbrev() == "b") {
+    			bKingOnG8 = true;
+    		}
+    	}
+    	/*if (wKingOnG1) {
+    		score += 0.1;
+    	}
+    	if (bKingOnG8) {
+    		score -= 0.1;
+    	}*/
+    	//Rooks should be in the center of the board
+    	boolean wRookOnD1 = false;
+    	boolean wRookOnE1 = false;
+    	boolean bRookOnD8 = false;
+    	boolean bRookOnE8 = false;
+    	if (_board[3][7] != null && _board[3][7] instanceof Rook) {
+    		if (_board[3][7].color().abbrev() == "w") {
+    			wRookOnD1 = true;
+    		}
+    	}
+    	if (_board[4][7] != null && _board[4][7] instanceof Rook) {
+    		if (_board[4][7].color().abbrev() == "w") {
+    			wRookOnE1 = true;
+    		}
+    	}
+    	if (_board[3][0] != null && _board[3][0] instanceof Rook) {
+    		if (_board[3][0].color().abbrev() == "b") {
+    			bRookOnD8 = true;
+    		}
+    	}
+    	if (_board[4][0] != null && _board[4][0] instanceof Rook) {
+    		if (_board[4][0].color().abbrev() == "b") {
+    			bRookOnE8 = true;
+    		}
+    	}
+    	if (wRookOnD1 || wRookOnE1) {
+    		score += 0.6;
+    	}
+    	if (bRookOnD8 || bRookOnE8) {
+    		score -= 0.6;
+    	}
+    	//Bishops should be fianchettoed
+    	boolean wBishopOnG2 = false;
+    	boolean wBishopOnB2 = false;
+    	boolean bBishopOnG7 = false;
+    	boolean bBishopOnB7 = false;
+    	if (_board[6][6] != null && _board[6][6] instanceof Bishop) {
+    		if (_board[6][6].color().abbrev() == "w") {
+    			wBishopOnG2 = true;
+    		}
+    	}
+    	if (_board[1][6] != null && _board[1][6] instanceof Bishop) {
+    		if (_board[1][6].color().abbrev() == "w") {
+    			wBishopOnB2 = true;
+    		}
+    	}
+    	if (_board[6][1] != null && _board[6][1] instanceof Bishop) {
+    		if (_board[6][1].color().abbrev() == "b") {
+    			bBishopOnG7 = true;
+    		}
+    	}
+    	if (_board[1][1] != null && _board[1][1] instanceof Bishop) {
+    		if (_board[1][1].color().abbrev() == "b") {
+    			bBishopOnB7 = true;
+    		}
+    	}
+    	if (wBishopOnG2 || wBishopOnB2) {
+    		score += 0.7;
+    	}
+    	if (bBishopOnG7 || bBishopOnB7) {
+    		score -= 0.7;
+    	}
 
 
 
-	return score;
-}
+    	return score;
+    }
 
-			
 
     /** Executes the single move MOVE on the board. */
     public void executeMove(SingleMove move) {
@@ -343,7 +381,6 @@ public double complexEval() {
         }
         SingleMove mS=(SingleMove)move;
 		//System.out.println(mS.movedPiece().color().toString()+" "+mS.movedPiece().type().toString()+" at "+mS.x1()+","+mS.y1()+" to "+(mS.x2())+","+(mS.y2()));
-
     }
 
     /** Returns whether COLOR king is being checked by the opponent. */
@@ -403,6 +440,51 @@ public double complexEval() {
     }
 
     /** Initializes the board to begin play. */
+    private void initializeBoard2() {
+    	Piece[][] board = new Piece[8][8];
+    	
+    	Piece blackRo1 = new Rook(BLACK, this, 0,0);
+    	board[0][0]=blackRo1;
+    	Piece blackRo2 = new Rook(BLACK, this, 0,7);
+    	board[0][7]=blackRo2;
+    	Piece blackPa1 = new Pawn(BLACK, this, 2,2);
+    	board[2][2]=blackPa1;
+    	Piece blackQu1 = new Queen(BLACK, this, 2,7);
+    	board[2][7]=blackQu1;
+    	Piece blackBi1 = new Bishop(BLACK, this, 4, 2);
+    	board[4][2]=blackBi1;
+    	Piece blackPa2 = new Pawn(BLACK, this, 5,1);
+    	board[5][1]=blackPa2;
+    	_blackKi = new King(BLACK, this, 5, 0);
+    	board[5][0]=_blackKi;
+    	Piece whiteQu1 = new Queen(WHITE, this, 5,4);
+    	board[5][4]=whiteQu1;
+    	Piece whiteRo1 = new Rook(WHITE, this, 6,5);
+    	board[6][5]=whiteRo1;
+    	_whiteKi=new King(WHITE, this, 7,6);
+    	board[7][6]=_whiteKi;
+    	
+            _board = board;
+    	
+    }
+    private void initializeBoard3() {
+    	Piece[][] board = new Piece[8][8];
+    	
+    	Piece blackRo1 = new Rook(BLACK, this, 0,4);
+    	board[0][4]=blackRo1;
+    	
+    	Piece whiteQu1 = new Queen(WHITE, this, 4,4);
+    	board[4][4]=whiteQu1;
+    	
+    	_blackKi = new King(BLACK, this, 0, 7);
+    	board[0][7]=_blackKi;
+    	
+    	_whiteKi=new King(WHITE, this, 0,0);
+    	board[0][0]=_whiteKi;
+    	
+            _board = board;
+    	
+    }
     private void initializeBoard() {
         Piece blackRo0 = new Rook(BLACK, this, 0, 0);
         Piece blackKn0 = new Knight(BLACK, this, 1, 0);
@@ -466,8 +548,22 @@ public double complexEval() {
     	List<Move> validMoves=new ArrayList<Move>();
     	ArrayList<LocationPair> potentialLocations=new ArrayList<LocationPair>();
     	if(p.type()==PAWN) {
-    		potentialLocations.add(new LocationPair(x,y+p.color().direction()));
-    		LocationPair l=new LocationPair(x,y+2*p.color().direction());
+    		LocationPair l=new LocationPair(x+1,y+1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x+1,y-1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x,y+1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x,y-1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-1,y+1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x-1,y-1);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		
+    		l=new LocationPair(x,y+2);
+    		if(l.onBoard()) potentialLocations.add(l);
+    		l=new LocationPair(x,y-2);
     		if(l.onBoard()) potentialLocations.add(l);
     	}
     	if(p.type()==KNIGHT) {

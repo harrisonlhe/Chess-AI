@@ -13,10 +13,19 @@ public class Main {
     public static void main(String... dummy) {
         Game game = new Game();
         game._original="ORIGINAL";
-        MinimaxPlayer random=new MinimaxPlayer(game,4);
+        
+       MinimaxPlayer whiteP=new MinimaxPlayer(game,4);
+        //MinimaxPlayer blackP=new MinimaxPlayer(game,4);
+        //RandomPlayer blackP=new RandomPlayer(game);
         //RandomPlayer random=new RandomPlayer(game);
         
-        Timer timer = new Timer();
-        timer.schedule(new Frame(game,random), 0, 5000);
+        
+        Timer timerB = new Timer();
+        Timer timerW = new Timer();
+        //timerB.schedule(new Frame(game,blackP), 0, 10000);
+        timerW.schedule(new FrameWhite(game,whiteP), 2500, 5000);
+        
+          
+         
     }
 }

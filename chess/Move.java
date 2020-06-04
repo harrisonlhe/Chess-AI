@@ -13,5 +13,9 @@ public interface Move {
 
     /** Returns the selected piece that moved in this move. */
     Piece movedPiece();
+    
+    Move dclone(Game g);
+    
+    Move changeBoard(Game g);
 
 }

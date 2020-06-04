@@ -11,6 +11,14 @@ public class DoubleMove implements Move {
         _move1 = move1;
         _move2 = move2;
     }
+    
+    public Move dclone(Game g) { //g is new game
+    	return new DoubleMove((SingleMove)_move1.dclone(g),(SingleMove)_move2.dclone(g));
+    }
+    
+    public Move changeBoard(Game g) {
+        return new DoubleMove((SingleMove)_move1.changeBoard(g),(SingleMove)_move2.changeBoard(g));
+    }
 
     @Override
     public boolean isDouble() {
